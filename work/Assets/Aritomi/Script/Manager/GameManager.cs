@@ -3,22 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// シーンの状態
+/// 有冨
+/// </summary>
+public enum GAME_SCENE_TYPE
+{
+    GAME_START = 0,     //! ゲームスタート
+    GAME_PLAY,          //! ゲームプレイ
+    GAME_END            //! ゲームエンド
+}
+
+/// <summary>
 /// ゲーム管理者
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    public static GameManager main = null;      // シングルトン
+    public GAME_SCENE_TYPE currentGameType;   // 現在のゲームタイプ
+
     [SerializeField]
     private GameObject m_ControllerObjectL = null;
     [SerializeField]
     private GameObject m_ControllerObjectR = null;
     [SerializeField]
     private GameObject m_Ring = null;
+    [SerializeField]
+    private GameObject m_gameStartObject = null;
+    [SerializeField]
+    private Timer m_timer = null;       
 
     private MyController m_ControllerL;   // 右コントローラー
     private MyController m_ControllerR;   // 左コントローラー
 
     /// <summary>
-    /// 
+    /// 初期化
+    /// </summary>
+    void Awake()
+    {
+        main = this;
+    }
+
+    /// <summary>
+    /// 開始
     /// </summary>
     void Start()
     {
@@ -34,6 +60,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("コントローラーコンポーネントがありません");
         }
+
+        m_timer.IsStop = true;
+
+        currentGameType = GAME_SCENE_TYPE.GAME_START;
     }
 
     // Update is called once per frame
@@ -41,6 +71,33 @@ public class GameManager : MonoBehaviour
     {
         SpawnRingL();
         SpawnRingR();
+        GameStartObjectUpdate();
+        GameOver();
+    }
+
+    /// <summary>
+    /// ゲームスタートオブジェクトこうしん
+    /// </summary>
+    private void GameStartObjectUpdate()
+    {
+        if (!m_gameStartObject)
+        {
+            return;
+        }
+
+        bool isActive = currentGameType == GAME_SCENE_TYPE.GAME_START;
+
+        m_gameStartObject.SetActive(isActive);
+    }
+
+    private void GameOver()
+    {
+        if (m_timer.IsEnd())
+        {
+            currentGameType = GAME_SCENE_TYPE.GAME_START;
+            m_timer.IsStop = true;
+            m_timer.ResetTime();
+        }
     }
 
     /// <summary>

@@ -16,9 +16,9 @@ public class KamatoPole : MonoBehaviour
     private int m_iLevel = 0;       //! レベル
     [SerializeField]
     private float m_scoreRotOffset = 0;  //!
-    private Aritomi.Score m_score;
+    private AritomiScore m_score;
 
-    public void SetScore(Aritomi.Score score)
+    public void SetScore(AritomiScore score)
     {
         m_score = score;
     }
@@ -29,7 +29,7 @@ public class KamatoPole : MonoBehaviour
     void Start()
     {
 
-        m_score = GameObject.Find("Score").GetComponent<Aritomi.Score>();
+        m_score = GameObject.Find("Score").GetComponent<AritomiScore>();
     }
 
     /// <summary>

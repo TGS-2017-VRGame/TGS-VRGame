@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ポールマネージャー
+/// 有冨
+/// </summary>
 public class PoleManager : MonoBehaviour
 {
     [SerializeField]
@@ -10,6 +14,8 @@ public class PoleManager : MonoBehaviour
     private List<GameObject> m_objectPoles = null;
     [SerializeField]
     private float m_fActiveTime = 1f;
+    
+    private AnimManager m_anim;
 
     private GameObject[] m_poles = null;
 
@@ -26,6 +32,8 @@ public class PoleManager : MonoBehaviour
     /// </summary>
     void Start()
     {
+        m_anim = new AnimManager();
+        m_anim.AddAnimMethod((int)GAME_SCENE_TYPE.GAME_PLAY, GamePlay);
         m_timerActive.Reset();
     }
 
@@ -33,6 +41,11 @@ public class PoleManager : MonoBehaviour
     /// 更新
     /// </summary>
     void Update()
+    {
+        m_anim.GetAnimMethod((int)GameManager.main.currentGameType);
+    }
+
+    private void GamePlay()
     {
         m_timerActive.Update(Time.deltaTime);
 
