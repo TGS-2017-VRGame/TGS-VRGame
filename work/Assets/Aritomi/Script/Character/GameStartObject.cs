@@ -12,6 +12,10 @@ public class GameStartObject : MonoBehaviour
     [SerializeField]
     private AritomiScore m_score = null;
 
+    private void Start()
+    {
+    }
+
     private void OnTriggerEnter(Collider _col)
     {
         bool isHit = _col.transform.CompareTag("Lasso");
