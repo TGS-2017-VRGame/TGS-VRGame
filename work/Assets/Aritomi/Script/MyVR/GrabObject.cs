@@ -14,6 +14,7 @@ public class GrabObject : MonoBehaviour
     private float m_power = 0.5f;
 
     private FixedJoint m_joint = null;
+    private AudioSource m_se = null;
 
     private bool m_isGrab;
     private bool m_isGrabed;
@@ -30,6 +31,7 @@ public class GrabObject : MonoBehaviour
         m_isGrab = false;
         m_isGrabed = false;
         m_controller = null;
+        m_se = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -63,10 +65,15 @@ public class GrabObject : MonoBehaviour
             return;
         }
 
-        if (HasController())
+        if (HasController() && m_controller)
         {
             //Debug.LogError("コントローラーをもう持っています");
-            return;
+            MyController ctrl = m_controller.GetComponent<MyController>();
+
+            if (ctrl.IsGrab())
+            {
+                return;
+            }
         }
 
         m_controller = controller;
@@ -134,8 +141,17 @@ public class GrabObject : MonoBehaviour
             controller.AddGrabNum();
         }
 
+        if (controller.IsGrabed())
+        {
+            if (m_se)
+            {
+                SEManager.main.PlayOneShot("ringthrow");
+            }
+        }
+
         if (!controller.IsGrab())
         {
+
             DestroyJoint();
             controller.ResetGrabNum();
         }

@@ -6,17 +6,19 @@ using UnityEngine;
 /// かまとぅポール
 /// でたり引っ込んだり
 /// </summary>
-public class KamatoPole : MonoBehaviour
+public class Pole : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_getScoreObject = null;      //! 
+    protected GameObject m_getScoreObject = null;      //! 
     [SerializeField]
-    private int m_addScore = 10;          //! スコア
+    protected int m_addScore = 10;          //! スコア
     [SerializeField]
-    private int m_iLevel = 0;       //! レベル
+    protected int m_iLevel = 0;       //! レベル
     [SerializeField]
-    private float m_scoreRotOffset = 0;  //!
-    private AritomiScore m_score;
+    protected float m_scoreRotOffset = 0;  //!
+    protected AritomiScore m_score;
+
+    private AudioSource m_audio;
 
     public void SetScore(AritomiScore score)
     {
@@ -28,7 +30,7 @@ public class KamatoPole : MonoBehaviour
     /// </summary>
     void Start()
     {
-
+        m_audio = GetComponent<AudioSource>();
         m_score = GameObject.Find("Score").GetComponent<AritomiScore>();
     }
 
@@ -37,23 +39,34 @@ public class KamatoPole : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            m_audio.PlayOneShot(m_audio.clip);
+        }
     }
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (!collider.CompareTag("Lasso"))
+        if (collider.CompareTag("Lasso"))
         {
-            return;
+            UniqeHitLasso();
         }
+    }
 
+    /// <summary>
+    /// 輪っかに当たった時の処理
+    /// </summary>
+    protected virtual void UniqeHitLasso()
+    {
+        SEManager.main.PlayOneShot("pointget");
         m_score.AddScore(m_addScore);
 
 
         if (HasGetScore(m_getScoreObject))
         {
-            GetScore getScore = 
+            GetScore getScore =
                 Instantiate(
-                    m_getScoreObject, 
+                    m_getScoreObject,
                     transform.position,
                     transform.rotation * Quaternion.Euler(0, m_scoreRotOffset, 0)).GetComponent<GetScore>();
 
@@ -68,7 +81,7 @@ public class KamatoPole : MonoBehaviour
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    private bool HasGetScore(GameObject obj)
+    protected bool HasGetScore(GameObject obj)
     {
         GetScore instance = obj.GetComponent<GetScore>();
 

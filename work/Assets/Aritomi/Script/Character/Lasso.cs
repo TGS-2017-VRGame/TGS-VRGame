@@ -15,6 +15,7 @@ public class Lasso : MonoBehaviour
 	void Start () {
 		isDestroy = false;
 		grab = GetComponent<GrabObject> ();
+        Destroy(gameObject, 10);
 		//gameObject.GetComponent<Rigidbody> ().useGravity = false;
 	}
 

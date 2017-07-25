@@ -146,6 +146,11 @@ public abstract class MyController : MonoBehaviour
         return m_currentIsGrab && !m_previousIsGrab;
     }
 
+    public bool IsGrabed()
+    {
+        return m_previousIsGrab && !m_currentIsGrab;
+    }
+
     /// <summary>
     /// 輪っか生成場所の設定ボタン
     /// </summary>

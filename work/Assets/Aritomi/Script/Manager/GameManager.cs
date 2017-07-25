@@ -13,6 +13,12 @@ public enum GAME_SCENE_TYPE
     GAME_END            //! ゲームエンド
 }
 
+public enum RING_TYPE
+{
+    NORMAL = 0,
+    BIG,
+}
+
 /// <summary>
 /// ゲーム管理者
 /// </summary>
@@ -20,6 +26,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager main = null;      // シングルトン
     public GAME_SCENE_TYPE currentGameType;   // 現在のゲームタイプ
+    public RING_TYPE currentRingType;
 
     [SerializeField]
     private GameObject m_ControllerObjectL = null;
@@ -27,6 +34,8 @@ public class GameManager : MonoBehaviour
     private GameObject m_ControllerObjectR = null;
     [SerializeField]
     private GameObject m_Ring = null;
+    [SerializeField]
+    private GameObject m_BigRing = null;
     [SerializeField]
     private GameObject m_gameStartObject = null;
     [SerializeField]
@@ -114,10 +123,26 @@ public class GameManager : MonoBehaviour
 
         if (m_ControllerL.IsGrabDown())
         {
-            Vector3 pos = m_ControllerL.GetTransform().position;
-            Quaternion rot = m_ControllerL.GetTransform().rotation;
-            GrabObject lasso = Instantiate(m_Ring, pos, rot).GetComponent<GrabObject>();
-            lasso.AttachController(m_ControllerObjectL);
+            Vector3 pos;
+            Quaternion rot;
+            GrabObject lasso;
+
+            switch (currentRingType)
+            {
+                case RING_TYPE.NORMAL:
+                    pos = m_ControllerL.GetTransform().position;
+                    rot = m_ControllerL.GetTransform().rotation;
+                    lasso = Instantiate(m_Ring, pos, rot).GetComponent<GrabObject>();
+                    lasso.AttachController(m_ControllerObjectL);
+                    break;
+
+                case RING_TYPE.BIG:
+                    pos = m_ControllerL.GetTransform().position;
+                    rot = m_ControllerL.GetTransform().rotation;
+                    lasso = Instantiate(m_BigRing, pos, rot).GetComponent<GrabObject>();
+                    lasso.AttachController(m_ControllerObjectL);
+                    break;
+            }
         }
     }
 
@@ -132,10 +157,27 @@ public class GameManager : MonoBehaviour
 
         if (m_ControllerR.IsGrabDown())
         {
-            Vector3 pos = m_ControllerR.GetTransform().position;
-            Quaternion rot = m_ControllerR.GetTransform().rotation;
-            GrabObject lasso = Instantiate(m_Ring, pos, rot).GetComponent<GrabObject>();
-            lasso.AttachController(m_ControllerObjectR);
+            Vector3 pos;
+            Quaternion rot;
+            GrabObject lasso;
+
+            switch (currentRingType)
+            {
+                case RING_TYPE.NORMAL:
+                    pos = m_ControllerR.GetTransform().position;
+                    rot = m_ControllerR.GetTransform().rotation;
+                    lasso = Instantiate(m_Ring, pos, rot).GetComponent<GrabObject>();
+                    lasso.AttachController(m_ControllerObjectR);
+                    break;
+
+                case RING_TYPE.BIG:
+                    pos = m_ControllerR.GetTransform().position;
+                    rot = m_ControllerR.GetTransform().rotation;
+                    lasso = Instantiate(m_BigRing, pos, rot).GetComponent<GrabObject>();
+                    lasso.AttachController(m_ControllerObjectR);
+                    break;
+            }
+            currentRingType = RING_TYPE.NORMAL;
         }
     }
 
