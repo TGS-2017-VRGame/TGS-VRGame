@@ -28,7 +28,8 @@ public class Timer : MonoBehaviour
     {
         defaultTime = time;
         IsStop = false;
-
+        // Aritomi Add
+        time = 0;
     }
 
     // Update is called once per frame
