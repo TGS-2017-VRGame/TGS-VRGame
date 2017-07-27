@@ -61,6 +61,8 @@ public class Pole : MonoBehaviour
                 samples[i] = 255;
             }
 
+            Destroy(GetComponent<Collider>());
+
             OVRHapticsClip hapticsClip = new OVRHapticsClip(samples, samples.Length);
             OVRHaptics.LeftChannel.Mix(hapticsClip);
             OVRHaptics.RightChannel.Mix(hapticsClip);
