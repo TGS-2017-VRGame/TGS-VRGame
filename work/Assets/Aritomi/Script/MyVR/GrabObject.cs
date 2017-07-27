@@ -32,6 +32,15 @@ public class GrabObject : MonoBehaviour
         m_isGrabed = false;
         m_controller = null;
         m_se = GetComponent<AudioSource>();
+        UniqueStart();
+    }
+
+    /// <summary>
+    /// 固有の初期化
+    /// </summary>
+    protected virtual void UniqueStart()
+    {
+
     }
 
     /// <summary>
@@ -240,6 +249,11 @@ public class GrabObject : MonoBehaviour
         Debug.Log(force);
 
         m_isGrabed = true;
+    }
+
+    protected virtual void UniqueThrow(float _force)
+    {
+
     }
 
     /// <summary>

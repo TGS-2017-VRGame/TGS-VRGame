@@ -18,7 +18,7 @@ public class GameStartObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider _col)
     {
-        bool isHit = _col.transform.CompareTag("Lasso");
+        bool isHit = _col.transform.CompareTag("LassoObject");
         if (isHit)
         {
             GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_PLAY;

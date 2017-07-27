@@ -20,6 +20,9 @@ public class Pole : MonoBehaviour
 
     private AudioSource m_audio;
 
+
+    public GameObject vibration;//バイブレーション用
+
     public void SetScore(AritomiScore score)
     {
         m_score = score;
@@ -50,6 +53,17 @@ public class Pole : MonoBehaviour
         if (collider.CompareTag("Lasso"))
         {
             UniqeHitLasso();
+
+            byte[] samples = new byte[8];
+
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i] = 255;
+            }
+
+            OVRHapticsClip hapticsClip = new OVRHapticsClip(samples, samples.Length);
+            OVRHaptics.LeftChannel.Mix(hapticsClip);
+            OVRHaptics.RightChannel.Mix(hapticsClip);
         }
     }
 
@@ -60,7 +74,6 @@ public class Pole : MonoBehaviour
     {
         SEManager.main.PlayOneShot("pointget");
         m_score.AddScore(m_addScore);
-
 
         if (HasGetScore(m_getScoreObject))
         {
@@ -73,7 +86,7 @@ public class Pole : MonoBehaviour
             getScore.SetScore(m_addScore);
         }
 
-        Destroy(gameObject);
+        Destroy(gameObject, 1);
     }
 
     /// <summary>

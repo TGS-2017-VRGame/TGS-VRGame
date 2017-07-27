@@ -13,7 +13,6 @@ public class GoldenPole : Pole
         GameManager.main.currentRingType = RING_TYPE.BIG;
         m_score.AddScore(m_addScore);
 
-
         if (HasGetScore(m_getScoreObject))
         {
             GetScore getScore =
@@ -25,6 +24,6 @@ public class GoldenPole : Pole
             getScore.SetScore(m_addScore);
         }
 
-        Destroy(gameObject);
+        Destroy(gameObject, 1);
     }
 }

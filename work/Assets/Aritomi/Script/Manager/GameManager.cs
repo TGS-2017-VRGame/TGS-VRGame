@@ -39,7 +39,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject m_gameStartObject = null;
     [SerializeField]
-    private Timer m_timer = null;       
+    private Timer m_timer = null;
+    [SerializeField]
+    private AritomiScore m_score = null;
+
+    private AritomiTimer m_isThrowTimer;
 
     private MyController m_ControllerL;   // 右コントローラー
     private MyController m_ControllerR;   // 左コントローラー
@@ -73,15 +77,26 @@ public class GameManager : MonoBehaviour
         m_timer.IsStop = true;
 
         currentGameType = GAME_SCENE_TYPE.GAME_START;
+
+        m_isThrowTimer = new AritomiTimer(0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        m_isThrowTimer.Update(Time.deltaTime);
+
         SpawnRingL();
         SpawnRingR();
         GameStartObjectUpdate();
         GameOver();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_PLAY;
+            m_timer.IsStop = false;
+            m_score.ResetScore();
+        }
     }
 
     /// <summary>
@@ -114,7 +129,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void SpawnRingL()
     {
-        bool isSpawn = HasControllerL() && HasGameObject(m_Ring);
+        bool isSpawn = HasControllerL() && HasGameObject(m_Ring) && m_isThrowTimer.IsTimeOver();
 
         if (!isSpawn)
         {
@@ -143,12 +158,13 @@ public class GameManager : MonoBehaviour
                     lasso.AttachController(m_ControllerObjectL);
                     break;
             }
+            m_isThrowTimer.SetTime(1);
         }
     }
 
     private void SpawnRingR()
     {
-        bool isSpawn = HasControllerR() && HasGameObject(m_Ring);
+        bool isSpawn = HasControllerR() && HasGameObject(m_Ring) && m_isThrowTimer.IsTimeOver();
 
         if (!isSpawn)
         {
@@ -178,6 +194,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
             currentRingType = RING_TYPE.NORMAL;
+            m_isThrowTimer.SetTime(1);
         }
     }
 
