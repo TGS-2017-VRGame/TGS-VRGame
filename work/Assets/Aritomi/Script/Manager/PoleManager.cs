@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 /// <summary>
 /// ポールマネージャー
 /// 有冨
@@ -16,10 +16,7 @@ public class PoleManager : MonoBehaviour
         GOLDEN_PATTI,
     }
     [SerializeField]
-    private SpawnPole[] m_setSpawnPoints = null;   //! スポーン位置セット用
-
-    private List<List<SpawnPole>> m_spawnPoints = null;//!実際に管理している二次元配列
-
+    private List<List<SpawnPole>> m_spawns = null;   //! スポーン位置
     [SerializeField]
     private GameObject[] m_objectPoles = null;  //! ポールオブジェクト
     [SerializeField]
@@ -48,6 +45,7 @@ public class PoleManager : MonoBehaviour
     private void Awake()
     {
         m_timerActive = new AritomiTimer(m_fActiveTime);
+        m_spawns = new List<List<SpawnPole>>();
     }
 
     /// <summary>
@@ -59,23 +57,28 @@ public class PoleManager : MonoBehaviour
         m_anim.AddAnimMethod((int)GAME_SCENE_TYPE.GAME_PLAY, GamePlay);
         m_timerActive.Reset();
 
-        SetSpawnPoint();
-    }
-
-    void SetSpawnPoint()
-    {
-        m_spawnPoints = new List<List<global::SpawnPole>>();
-        var length = 3;
-        for (var y = 0; y < length; y++)
+        var child = transform.GetComponentsInChildren<SpawnPole>().ToList();
+        child.Sort(NameNumberCompare);
+        for (int y = 0; y < 3; y++)
         {
             var list = new List<SpawnPole>();
-            for (var x = 0; x < length; x++)
+            for (int x = 0; x < 3; x++)
             {
-                list.Add(m_setSpawnPoints[x + y]);
+                list.Add(child[x]);
             }
-            m_spawnPoints.Add(list);
+            m_spawns.Add(list);
         }
+
     }
+
+    /*
+    SpawnPoleのオブジェクト名の最後が数字なのでその数字を使いソート
+    */
+    int NameNumberCompare(SpawnPole _a,SpawnPole _b)
+    {
+        return _a.name.LastOrDefault() - _b.name.LastOrDefault();
+    }
+
     /// <summary>
     /// 更新
     /// </summary>
@@ -100,7 +103,7 @@ public class PoleManager : MonoBehaviour
         int index_Y = Random.Range(0, 3);
 
         int indexObjectPole = Random.Range(0, m_objectPoles.Length);
-        var point = m_spawnPoints[index_X][index_Y];
+        var point = m_spawns[index_X][index_Y];
         if (point.HasPole())
         {
             point.Create(m_objectPoles[indexObjectPole]);
