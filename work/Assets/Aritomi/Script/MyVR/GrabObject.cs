@@ -246,7 +246,9 @@ public class GrabObject : MonoBehaviour
         Destroy(joint);
         var force = controller.Throw();
         rigidbody.AddForce(force);
+#if UNITY_EDITOR
         Debug.Log(force);
+#endif
 
         m_isGrabed = true;
     }

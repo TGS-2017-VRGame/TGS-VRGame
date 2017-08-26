@@ -45,7 +45,6 @@ public class AritomiTimer
     public void SetTime(float setTime)
     {
         m_setTime = setTime;
-        m_time = m_setTime;
 
         Reset();
     }
@@ -90,6 +89,15 @@ public class AritomiTimer
     public float GetTime()
     {
         return m_time;
+    }
+
+    /// <summary>
+    /// 1~0の範囲で時間を取得する
+    /// </summary>
+    /// <returns></returns>
+    public float GetT()
+    {
+        return m_time / m_setTime;
     }
 
     /// <summary>

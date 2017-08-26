@@ -18,16 +18,12 @@ public class AritomiScore : MonoBehaviour
     public void AddScore(int num)
     {
 
-        m_iScore += num+m_bonus[m_comboCount];
-        m_comboCount = Mathf.Clamp(m_comboCount+1,0,m_bonus.Length-1);
 
         UpdateText();
     }
 
     public void ResetScore()
     {
-        m_iScore = 0;
-        m_comboCount = 0;
         UpdateText();
     }
 

@@ -3,38 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// かまとぅポール
-/// でたり引っ込んだり
+/// ポール
 /// </summary>
 public class Pole : MonoBehaviour
 {
+    public int AddScore {get; set;}                     //! 追加するスコア
     [SerializeField]
-    protected GameObject m_getScoreObject = null;      //! 
+    protected GameObject m_getScoreObject = null;       //! 獲得スコアエフェクト
     [SerializeField]
-    protected int m_addScore = 10;          //! スコア
+    protected int m_addScore = 10;                      //! スコア
     [SerializeField]
-    protected int m_iLevel = 0;       //! レベル
+    protected int m_iLevel = 0;                         //! レベル
     [SerializeField]
-    protected float m_scoreRotOffset = 0;  //!
-    protected AritomiScore m_score;
+    protected float m_scoreRotOffset = 0;               //! 獲得スコアエフェクトの回転オフセット
 
-    private AudioSource m_audio;
-
-
-    public GameObject vibration;//バイブレーション用
-
-    public void SetScore(AritomiScore score)
-    {
-        m_score = score;
-    }
+    protected Score m_score;                     //! スコア
 
     /// <summary>
     /// 開始
     /// </summary>
     void Start()
     {
-        m_audio = GetComponent<AudioSource>();
-        m_score = GameObject.Find("Score").GetComponent<AritomiScore>();
+        m_score = GameObject.Find("Score").GetComponent<Score>();
     }
 
     /// <summary>
@@ -42,31 +32,41 @@ public class Pole : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            m_audio.PlayOneShot(m_audio.clip);
-        }
     }
 
+    /// <summary>
+    /// 衝突判定
+    /// </summary>
+    /// <param name="collider"></param>
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Lasso"))
+        if (!collider.CompareTag("Lasso"))
         {
-            UniqeHitLasso();
-
-            byte[] samples = new byte[8];
-
-            for (int i = 0; i < samples.Length; i++)
-            {
-                samples[i] = 255;
-            }
-
-            Destroy(GetComponent<Collider>());
-
-            OVRHapticsClip hapticsClip = new OVRHapticsClip(samples, samples.Length);
-            OVRHaptics.LeftChannel.Mix(hapticsClip);
-            OVRHaptics.RightChannel.Mix(hapticsClip);
+            return;
         }
+
+        UniqeHitLasso();
+
+        PlayVibration();
+    }
+
+    /// <summary>
+    /// バイブレーションを再生
+    /// </summary>
+    private void PlayVibration()
+    {
+        byte[] samples = new byte[8];
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] = 255;
+        }
+
+        Destroy(GetComponent<Collider>());
+
+        OVRHapticsClip hapticsClip = new OVRHapticsClip(samples, samples.Length);
+        OVRHaptics.LeftChannel.Mix(hapticsClip);
+        OVRHaptics.RightChannel.Mix(hapticsClip);
     }
 
     /// <summary>
@@ -75,8 +75,15 @@ public class Pole : MonoBehaviour
     protected virtual void UniqeHitLasso()
     {
         SEManager.main.PlayOneShot("pointget");
-        m_score.AddScore(m_addScore);
+        int point = m_score.Add(m_addScore);
 
+        CreateGetScoreObject(point);
+
+        Destroy(gameObject, 1);
+    }
+
+    protected void CreateGetScoreObject(int _point)
+    {
         if (HasGetScore(m_getScoreObject))
         {
             GetScore getScore =
@@ -85,10 +92,8 @@ public class Pole : MonoBehaviour
                     transform.position,
                     transform.rotation * Quaternion.Euler(0, m_scoreRotOffset, 0)).GetComponent<GetScore>();
 
-            getScore.SetScore(m_addScore);
+            getScore.SetScore(_point);
         }
-
-        Destroy(gameObject, 1);
     }
 
     /// <summary>
@@ -98,13 +103,6 @@ public class Pole : MonoBehaviour
     /// <returns></returns>
     protected bool HasGetScore(GameObject obj)
     {
-        GetScore instance = obj.GetComponent<GetScore>();
-
-        if (instance)
-        {
-            return true;
-        }
-
-        return false;
+        return obj.GetComponent<GetScore>();
     }
 }

@@ -11,18 +11,9 @@ public class GoldenPole : Pole
     {
         SEManager.main.PlayOneShot("goldenGet");
         GameManager.main.currentRingType = RING_TYPE.BIG;
-        m_score.AddScore(m_addScore);
+        int point = m_score.Add(m_addScore);
 
-        if (HasGetScore(m_getScoreObject))
-        {
-            GetScore getScore =
-                Instantiate(
-                    m_getScoreObject,
-                    transform.position,
-                    transform.rotation * Quaternion.Euler(0, m_scoreRotOffset, 0)).GetComponent<GetScore>();
-
-            getScore.SetScore(m_addScore);
-        }
+        CreateGetScoreObject(point);
 
         Destroy(gameObject, 1);
     }

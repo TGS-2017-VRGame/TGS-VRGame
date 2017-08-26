@@ -20,7 +20,7 @@ public class SpawnPole : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -33,12 +33,16 @@ public class SpawnPole : MonoBehaviour
     /// 生成
     /// </summary>
     /// <param name="_pole"></param>
-    public void Create(GameObject _pole)
+    public void Create(GameObject _pole, int _score)
     {
-        if (IsActive)
+        if (!IsActive)
         {
-            m_currentPole = Instantiate(_pole, transform.position, Quaternion.identity);
+            return;
         }
+
+        m_currentPole = Instantiate(_pole, transform.position, Quaternion.identity);
+       // m_currentPole.GetComponent<Pole>().AddScore = _score;
+
     }
 
     /// <summary>

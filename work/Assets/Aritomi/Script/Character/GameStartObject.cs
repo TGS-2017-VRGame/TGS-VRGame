@@ -10,10 +10,11 @@ public class GameStartObject : MonoBehaviour
     [SerializeField]
     private Timer m_timer = null;
     [SerializeField]
-    private AritomiScore m_score = null;
+    private Score m_score = null;
 
     private void Start()
     {
+        m_score = GameObject.Find("Score").GetComponent<Score>();
     }
 
     private void OnTriggerEnter(Collider _col)
@@ -23,7 +24,7 @@ public class GameStartObject : MonoBehaviour
         {
             GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_PLAY;
             m_timer.IsStop = false;
-            m_score.ResetScore();
+            m_score.Reset();
             Destroy(_col.gameObject);
         }
     }

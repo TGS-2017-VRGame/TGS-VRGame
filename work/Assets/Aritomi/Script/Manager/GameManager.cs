@@ -10,6 +10,7 @@ public enum GAME_SCENE_TYPE
 {
     GAME_START = 0,     //! ゲームスタート
     GAME_PLAY,          //! ゲームプレイ
+    GAME_RUSH,          //! ラッシュ
     GAME_END            //! ゲームエンド
 }
 
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Timer m_timer = null;
     [SerializeField]
-    private AritomiScore m_score = null;
+    private Score m_score = null;
 
     private AritomiTimer m_isThrowTimer;
 
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviour
         currentGameType = GAME_SCENE_TYPE.GAME_START;
 
         m_isThrowTimer = new AritomiTimer(0);
+
+        m_score = GameObject.Find("Score").GetComponent<Score>();
     }
 
     // Update is called once per frame
@@ -91,11 +94,17 @@ public class GameManager : MonoBehaviour
         GameStartObjectUpdate();
         GameOver();
 
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_RUSH;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_PLAY;
             m_timer.IsStop = false;
-            m_score.ResetScore();
+            m_score.Reset();
+            //ポールマネージャのリセットもしといて
         }
     }
 
