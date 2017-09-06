@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
         GameStartObjectUpdate();
         GameOver();
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (FlagAssistant.main.IsRushMode)
         {
             GameManager.main.currentGameType = GAME_SCENE_TYPE.GAME_RUSH;
         }
@@ -268,5 +268,14 @@ public class GameManager : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// スコアが同じか？
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSameScore(int _score)
+    {
+        return m_score.IsSameScore(_score);
     }
 }

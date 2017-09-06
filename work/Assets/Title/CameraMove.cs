@@ -12,10 +12,14 @@ public class CameraMove : MonoBehaviour
 	[SerializeField]
 	private GameObject[] m_destroyObjects = new GameObject[0];
 
+    private Animator m_anim;
+
     // Use this for initialization
     void Start()
 	{
         m_titleImae.FadeStart(State.FADEOUT, RawImageFadeStart);
+
+        m_anim = GetComponent<Animator>();
 	}
 
 	/// <summary>
@@ -23,7 +27,8 @@ public class CameraMove : MonoBehaviour
 	/// </summary>
 	void FadeEnd()
 	{
-		iTween.MoveTo(gameObject, iTween.Hash("path", iTweenPath.GetPath("NewPath1"), "time", 50.0f));
+        m_anim.Play("OpeningCamera");
+
         for (int i = 0; i < m_destroyObjects.Length; i++)
         {
             Destroy(m_destroyObjects[i]);

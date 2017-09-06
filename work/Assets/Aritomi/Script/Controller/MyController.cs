@@ -118,7 +118,7 @@ public abstract class MyController : MonoBehaviour
         const float LOW_POWER = 0.01f;
         const float MAX_ANGLE = 90.0f;
        var vels= m_positions.Where((Vector3 v) => { return v.magnitude >= LOW_POWER; })
-            .Where((Vector3 v)=> { return Mathf.Abs(Vector3.Angle(m_HMD.transform.position, v)) <= MAX_ANGLE; }).ToList();
+            .Where((Vector3 v)=> { return Mathf.Abs(Vector3.Angle(m_HMD.transform.forward, v)) <= MAX_ANGLE; }).ToList();
 
         Vector3 result = Vector3.zero;
         foreach(var pos in vels)

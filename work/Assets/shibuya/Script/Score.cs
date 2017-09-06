@@ -9,7 +9,7 @@ public class Score : MonoBehaviour
     private Text m_text;          //! スコアのテキスト
     [SerializeField]
     private Slider m_slider;      //! スライダー
-    int m_iScore;               //! スコアの数値
+    private int m_iScore;               //! スコアの数値
     [SerializeField]
     int[] m_bonus = null;       //! コンボボーナス
     int m_comboCount;           //! コンボカウント
@@ -91,5 +91,14 @@ public class Score : MonoBehaviour
     public void ResetCount()
     {
         m_comboCount = 0;
+    }
+
+    /// <summary>
+    /// スコアが同じか？
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSameScore(int _score)
+    {
+        return m_iScore == _score;
     }
 }

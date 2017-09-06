@@ -76,7 +76,7 @@ public class BonusCharacter : MonoBehaviour
             return;
         }
 
-        m_isActive = false;
+        m_isActive = true;
 
         m_animator.Play(m_animshow);
         m_step = AnimStep.SPAWN;
@@ -102,8 +102,6 @@ public class BonusCharacter : MonoBehaviour
             m_step = AnimStep.END;
 
             m_animator.Play(m_animhide);
-
-            m_step = AnimStep.END;
         }
     }
 
@@ -120,6 +118,8 @@ public class BonusCharacter : MonoBehaviour
     public void EndAnimation()
     {
         m_step = AnimStep.START;
+
+        m_waitTimer.Reset();
 
         m_isActive = false;
     }
